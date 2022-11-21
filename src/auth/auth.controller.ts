@@ -7,7 +7,7 @@ export class AuthController {
 
   @Post('signup')
   signup() {
-    return 'I am signup';
+    return 'I from signup';
   }
 
   @Post('signin')
