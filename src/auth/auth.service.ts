@@ -3,9 +3,10 @@ import { User, Bookmark } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { authDto } from './dto';
 import * as argon from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
   async signup(dto: authDto) {
     //   generate password
@@ -19,7 +20,6 @@ export class AuthService {
         lastname: dto.lastname,
       },
     });
-
     //   return the saved user
     delete user.hash;
     return user;
@@ -44,7 +44,14 @@ export class AuthService {
     }
     // send back the user
     delete user.hash;
+    return this.signToken(user.id, user.email);
+  }
 
-    return user;
+  signToken(userId: number, email: string): Promise<string> {
+    const data = {
+      sub: userId,
+      email,
+    };
+    return this.jwt.signAsync(data, { expiresIn: '10m', secret: process.env.JWT_SECRET });
   }
 }
