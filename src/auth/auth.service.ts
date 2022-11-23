@@ -22,7 +22,7 @@ export class AuthService {
     });
     //   return the saved user
     delete user.hash;
-    return user;
+    return this.signToken(user.id, user.email);
   }
 
   async signin(dto: authDto) {
@@ -47,11 +47,15 @@ export class AuthService {
     return this.signToken(user.id, user.email);
   }
 
-  signToken(userId: number, email: string): Promise<string> {
+  async signToken(userId: number, email: string): Promise<{ access_token: string }> {
     const data = {
       sub: userId,
       email,
     };
-    return this.jwt.signAsync(data, { expiresIn: '10m', secret: process.env.JWT_SECRET });
+    const token = await this.jwt.signAsync(data, {
+      expiresIn: '10m',
+      secret: process.env.JWT_SECRET,
+    });
+    return { access_token: token };
   }
 }
