@@ -15,12 +15,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String
+  email String @unique
   hash String
 
   firstname String
   lastname String
-
+ 
+ @@map("users")
 }
 
 model Bookmark {
@@ -31,4 +32,5 @@ model Bookmark {
   title String
   description String
   link String
+  @@map("bookmarks")
 }
