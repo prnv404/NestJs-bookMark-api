@@ -33,7 +33,6 @@ export class AuthService {
         email: dto.email,
       },
     });
-
     // if user dosent exist throw execption
     if (!user) {
       throw new ForbiddenException('No user found');
@@ -45,7 +44,8 @@ export class AuthService {
       throw new ForbiddenException('password doesent match');
     }
     // send back the user
-    delete user.hash
+    delete user.hash;
+
     return user;
   }
 }
